@@ -13,7 +13,7 @@ function BroadCastedList({ broadCastedLeads }) {
       </thead>
       <tbody>
         {broadCastedLeads.map((lead) => (
-          <BroadCastedListItem lead={lead} />
+          <BroadCastedListItem lead={lead} key={lead._id} />
         ))}
       </tbody>
     </table>

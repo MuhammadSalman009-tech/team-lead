@@ -19,6 +19,7 @@ function MainList({ leads, getAllLeads, getAllBroadCastedLeads }) {
             lead={lead}
             getAllLeads={getAllLeads}
             getAllBroadCastedLeads={getAllBroadCastedLeads}
+            key={lead._id}
           />
         ))}
       </tbody>

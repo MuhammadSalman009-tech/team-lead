@@ -10,11 +10,9 @@ function MainComponent() {
   const history = useHistory();
   const getAllLeads = () => {
     const user = JSON.parse(localStorage.getItem("user"));
-    console.log(user);
     return axios
       .post("http://localhost:5000/leads/", { userID: user.id })
       .then(function (response) {
-        console.log(response.data);
         setLeads(response.data);
       })
       .catch(function (error) {

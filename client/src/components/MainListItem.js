@@ -15,7 +15,6 @@ function MainListItem({ lead, getAllLeads, getAllBroadCastedLeads }) {
         conversion: value,
       })
       .then(function (response) {
-        console.log(response.data);
         getAllLeads();
       })
       .catch(function (error) {
@@ -35,7 +34,6 @@ function MainListItem({ lead, getAllLeads, getAllBroadCastedLeads }) {
         broadcast: value,
       })
       .then(function (response) {
-        console.log(response.data);
         getAllLeads();
         getAllBroadCastedLeads();
       })
@@ -44,7 +42,7 @@ function MainListItem({ lead, getAllLeads, getAllBroadCastedLeads }) {
       });
   };
   return (
-    <tr class={lead.conversion_status ? "table-success" : ""}>
+    <tr className={lead.conversion_status ? "table-success" : ""}>
       <td>{lead.name}</td>
       <td>{lead.company}</td>
       <td>{lead.domain}</td>
