@@ -1,7 +1,6 @@
 const Lead = require("../Models/lead");
 module.exports.create = async (req, res) => {
   const { leadName, leadCompany, leadDomain } = req.body;
-  console.log(req.body);
   try {
     if (!leadName) {
       return res.status(400).json({ nameErr: "Please Enter Lead Name" });
@@ -19,7 +18,7 @@ module.exports.create = async (req, res) => {
       domain: leadDomain,
       conversion_status: false,
       broadcast_status: false,
-      created_by: "12345678",
+      created_by: req.user,
     });
     const savedLead = await lead.save();
     if (!savedLead) {
@@ -31,17 +30,35 @@ module.exports.create = async (req, res) => {
     res.status(500).json({ msg: error.message });
   }
 };
-module.exports.getAll = async (req, res) => {
-  const leads = await Lead.find();
+module.exports.getAllLeads = async (req, res) => {
+  const leads = await Lead.find({ created_by: req.user });
   res.send(leads);
+};
+module.exports.getAllBroadCatedLeads = async (req, res) => {
+  const broadcastedLeads = await Lead.find({
+    broadcast_status: true,
+  }).exec();
+  res.send(broadcastedLeads);
 };
 module.exports.updateConversion = async (req, res) => {
   try {
-    const { conversion, id } = req.body;
-    console.log(conversion, id);
-    const lead = Lead.findById({ _id: id });
-    res.send(lead);
+    const { conversion } = req.body;
+    const id = req.params.id;
+    const lead = await Lead.findById(String(id));
     lead.conversion_status = conversion;
+    const savedLead = await lead.save();
+    res.status(200).json(savedLead);
+  } catch (error) {
+    console.log("update conversion server error");
+    res.status(500).json({ msg: error.message });
+  }
+};
+module.exports.updateBroadCast = async (req, res) => {
+  try {
+    const { broadcast } = req.body;
+    const id = req.params.id;
+    const lead = await Lead.findById(String(id));
+    lead.broadcast_status = broadcast;
     const savedLead = await lead.save();
     res.status(200).json(savedLead);
   } catch (error) {

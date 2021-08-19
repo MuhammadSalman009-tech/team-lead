@@ -1,57 +1,28 @@
-import axios from "axios";
-import React, { useState } from "react";
+import React from "react";
+import MainListItem from "./MainListItem";
 
-function MainList({ lead }) {
-  const handleConversionChange = (e) => {
-    const id = lead._id;
-    let value;
-    if (e.target.value == "false") {
-      value = true;
-    } else {
-      value = false;
-    }
-
-    console.log(id, value);
-    // axios
-    //   .get(`http://localhost:5000/leads/update/${id}`, { id })
-    //   .then(function (response) {
-    //     console.log(response.data);
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   });
-  };
-  const handleBroadCastChange = () => {};
+function MainList({ leads, getAllLeads, getAllBroadCastedLeads }) {
   return (
-    <tr>
-      <td>{lead.name}</td>
-      <td>{lead.company}</td>
-      <td>{lead.domain}</td>
-      <td>
-        <div className="form-check form-switch">
-          <input
-            className="form-check-input"
-            type="checkbox"
-            id="converion-status"
-            name="converion-status"
-            onChange={handleConversionChange}
-            value={lead.conversion_status}
+    <table className="table table-bordered">
+      <thead>
+        <tr>
+          <th scope="col">Lead Name</th>
+          <th scope="col">Lead Company</th>
+          <th scope="col">Lead Domain</th>
+          <th scope="col">Conversion Status</th>
+          <th scope="col">BroadCast Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        {leads.map((lead) => (
+          <MainListItem
+            lead={lead}
+            getAllLeads={getAllLeads}
+            getAllBroadCastedLeads={getAllBroadCastedLeads}
           />
-        </div>
-      </td>
-      <td>
-        <div className="form-check form-switch">
-          <input
-            className="form-check-input"
-            type="checkbox"
-            id="broadcast-status"
-            name="broadcast-status"
-            onChange={handleBroadCastChange}
-            value={lead.broadcast_status}
-          />
-        </div>
-      </td>
-    </tr>
+        ))}
+      </tbody>
+    </table>
   );
 }
 

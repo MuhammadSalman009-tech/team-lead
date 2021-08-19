@@ -6,15 +6,19 @@ const initialState = {
   leadCompany: "",
   leadDomain: "",
 };
-function AddLeadForm({ getAllLeads, setLeads }) {
+function AddLeadForm({ getAllLeads }) {
   const [formData, setFormData] = useState(initialState);
+  const user = JSON.parse(localStorage.getItem("user"));
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .post("http://localhost:5000/leads/create", formData)
+      .post("http://localhost:5000/leads/create", {
+        ...formData,
+        userID: user.id,
+      })
       .then(function (response) {
         getAllLeads();
       })

@@ -2,15 +2,30 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import AddLeadForm from "./AddLeadForm";
+import BroadCastedList from "./BroadCastedList";
 import MainList from "./MainList";
 function MainComponent() {
   const [leads, setLeads] = useState([]);
+  const [broadCastedLeads, setBroadCastedLeads] = useState([]);
   const history = useHistory();
   const getAllLeads = () => {
+    const user = JSON.parse(localStorage.getItem("user"));
+    console.log(user);
     return axios
-      .get("http://localhost:5000/leads/")
+      .post("http://localhost:5000/leads/", { userID: user.id })
       .then(function (response) {
+        console.log(response.data);
         setLeads(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+  const getAllBroadCastedLeads = () => {
+    return axios
+      .get("http://localhost:5000/leads/broadcasted")
+      .then(function (response) {
+        setBroadCastedLeads(response.data);
       })
       .catch(function (error) {
         console.log(error);
@@ -22,27 +37,21 @@ function MainComponent() {
       history.push("/user/signin");
     }
     getAllLeads();
+    getAllBroadCastedLeads();
   }, []);
   return (
     <div className="container">
-      <h1>salman</h1>
-      <AddLeadForm leads={leads} getAllLeads={getAllLeads} />
-      <table className="table table-bordered">
-        <thead>
-          <tr>
-            <th scope="col">Lead Name</th>
-            <th scope="col">Lead Company</th>
-            <th scope="col">Lead Domain</th>
-            <th scope="col">Conversion Status</th>
-            <th scope="col">BroadCast Status</th>
-          </tr>
-        </thead>
-        <tbody>
-          {leads.map((lead) => (
-            <MainList lead={lead} />
-          ))}
-        </tbody>
-      </table>
+      <AddLeadForm getAllLeads={getAllLeads} />
+      <hr />
+      <h1 className="mt-3">Mian List</h1>
+      <MainList
+        leads={leads}
+        getAllLeads={getAllLeads}
+        getAllBroadCastedLeads={getAllBroadCastedLeads}
+      />
+      <hr />
+      <h1 className="mt-3">BroadCasted List</h1>
+      <BroadCastedList broadCastedLeads={broadCastedLeads} />
     </div>
   );
 }
